@@ -2,26 +2,25 @@ package ru.yandex.practicum.collector.handler.sensor;
 
 import org.apache.avro.specific.SpecificRecordBase;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.collector.model.sensor.ClimateSensorEvent;
-import ru.yandex.practicum.collector.model.sensor.SensorEvent;
-import ru.yandex.practicum.collector.model.sensor.SensorEventType;
+import ru.yandex.practicum.grpc.telemetry.event.ClimateSensorProto;
+import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 import ru.yandex.practicum.kafka.telemetry.event.ClimateSensorAvro;
 
 @Component
 public class ClimateSensorEventHandler implements SensorEventHandler {
 
     @Override
-    public SensorEventType getMessageType() {
-        return SensorEventType.CLIMATE_SENSOR_EVENT;
+    public SensorEventProto.PayloadCase getMessageType() {
+        return SensorEventProto.PayloadCase.CLIMATE_SENSOR_EVENT;
     }
 
     @Override
-    public SpecificRecordBase mapToAvro(SensorEvent event) {
-        ClimateSensorEvent e = (ClimateSensorEvent) event;
+    public SpecificRecordBase mapToAvro(SensorEventProto event) {
+        ClimateSensorProto sensor = event.getClimateSensorEvent();
         return ClimateSensorAvro.newBuilder()
-                .setTemperatureC(e.getTemperatureC())
-                .setHumidity(e.getHumidity())
-                .setCo2Level(e.getCo2Level())
+                .setTemperatureC(sensor.getTemperatureC())
+                .setHumidity(sensor.getHumidity())
+                .setCo2Level(sensor.getCo2Level())
                 .build();
     }
 }
