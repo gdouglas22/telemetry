@@ -13,12 +13,5 @@ public class KafkaProperties {
     private String groupId;
     private String autoOffsetReset;
     private long pollTimeoutMs;
-    private Topics topics = new Topics();
-
-    @Getter
-    @Setter
-    public static class Topics {
-        private String sensors;
-        private String snapshots;
-    }
+    private KafkaTopics topics = new KafkaTopics();
 }
