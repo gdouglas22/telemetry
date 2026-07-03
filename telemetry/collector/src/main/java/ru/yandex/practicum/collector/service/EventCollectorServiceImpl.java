@@ -1,18 +1,18 @@
 package ru.yandex.practicum.collector.service;
 
+import com.google.protobuf.Timestamp;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.collector.handler.hub.HubEventHandler;
 import ru.yandex.practicum.collector.handler.sensor.SensorEventHandler;
-import ru.yandex.practicum.collector.model.hub.HubEvent;
-import ru.yandex.practicum.collector.model.hub.HubEventType;
-import ru.yandex.practicum.collector.model.sensor.SensorEvent;
-import ru.yandex.practicum.collector.model.sensor.SensorEventType;
+import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
+import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -24,8 +24,8 @@ public class EventCollectorServiceImpl implements EventCollectorService {
     private final KafkaTemplate<String, SpecificRecordBase> kafkaTemplate;
     private final String sensorsTopic;
     private final String hubsTopic;
-    private final Map<SensorEventType, SensorEventHandler> sensorHandlers;
-    private final Map<HubEventType, HubEventHandler> hubHandlers;
+    private final Map<SensorEventProto.PayloadCase, SensorEventHandler> sensorHandlers;
+    private final Map<HubEventProto.PayloadCase, HubEventHandler> hubHandlers;
 
     public EventCollectorServiceImpl(
             KafkaTemplate<String, SpecificRecordBase> kafkaTemplate,
@@ -43,31 +43,35 @@ public class EventCollectorServiceImpl implements EventCollectorService {
     }
 
     @Override
-    public void collectSensorEvent(SensorEvent event) {
-        SensorEventHandler handler = sensorHandlers.get(event.getType());
+    public void collectSensorEvent(SensorEventProto event) {
+        SensorEventHandler handler = sensorHandlers.get(event.getPayloadCase());
         if (handler == null) {
-            throw new IllegalArgumentException("Unknown sensor event type: " + event.getType());
+            throw new IllegalArgumentException("Unknown sensor event payload: " + event.getPayloadCase());
         }
         SensorEventAvro avro = SensorEventAvro.newBuilder()
                 .setId(event.getId())
                 .setHubId(event.getHubId())
-                .setTimestamp(event.getTimestamp())
+                .setTimestamp(mapTimestamp(event.getTimestamp()))
                 .setPayload(handler.mapToAvro(event))
                 .build();
         kafkaTemplate.send(sensorsTopic, event.getHubId(), avro);
     }
 
     @Override
-    public void collectHubEvent(HubEvent event) {
-        HubEventHandler handler = hubHandlers.get(event.getType());
+    public void collectHubEvent(HubEventProto event) {
+        HubEventHandler handler = hubHandlers.get(event.getPayloadCase());
         if (handler == null) {
-            throw new IllegalArgumentException("Unknown hub event type: " + event.getType());
+            throw new IllegalArgumentException("Unknown hub event payload: " + event.getPayloadCase());
         }
         HubEventAvro avro = HubEventAvro.newBuilder()
                 .setHubId(event.getHubId())
-                .setTimestamp(event.getTimestamp())
+                .setTimestamp(mapTimestamp(event.getTimestamp()))
                 .setPayload(handler.mapToAvro(event))
                 .build();
         kafkaTemplate.send(hubsTopic, event.getHubId(), avro);
+    }
+
+    private Instant mapTimestamp(Timestamp timestamp) {
+        return Instant.ofEpochSecond(timestamp.getSeconds(), timestamp.getNanos());
     }
 }

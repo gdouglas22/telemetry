@@ -1,5 +1,6 @@
-server:
-  port: 8080
+grpc:
+  server:
+    port: 59091
 
 spring:
   application:
@@ -8,7 +9,6 @@ spring:
 collector:
   kafka:
     bootstrap-servers: localhost:9092
-    schema-registry-url: http://localhost:8081
     topics:
       sensors: telemetry.sensors.v1
       hubs: telemetry.hubs.v1
