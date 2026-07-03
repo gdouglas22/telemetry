@@ -9,7 +9,6 @@ spring:
 collector:
   kafka:
     bootstrap-servers: localhost:9092
-    schema-registry-url: http://localhost:8081
     topics:
       sensors: telemetry.sensors.v1
       hubs: telemetry.hubs.v1
