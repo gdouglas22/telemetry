@@ -1,0 +1,35 @@
+package ru.yandex.practicum.interaction.dto;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.util.UUID;
+
+@Getter
+@Setter
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class NewProductInWarehouseRequest {
+
+    @NotNull
+    private UUID productId;
+
+    private Boolean fragile;
+
+    @NotNull
+    @Valid
+    private DimensionDto dimension;
+
+    @NotNull
+    @Positive
+    private Double weight;
+}
