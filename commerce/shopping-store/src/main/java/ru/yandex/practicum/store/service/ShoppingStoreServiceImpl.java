@@ -2,19 +2,19 @@ package ru.yandex.practicum.store.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.yandex.practicum.interaction.dto.ProductCategory;
 import ru.yandex.practicum.interaction.dto.ProductDto;
 import ru.yandex.practicum.interaction.dto.ProductState;
-import ru.yandex.practicum.interaction.dto.QuantityState;
+import ru.yandex.practicum.interaction.dto.SetProductQuantityStateRequest;
 import ru.yandex.practicum.interaction.exception.ProductNotFoundException;
 import ru.yandex.practicum.store.mapper.ProductMapper;
 import ru.yandex.practicum.store.model.Product;
 import ru.yandex.practicum.store.repository.ProductRepository;
 
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -28,10 +28,9 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ProductDto> getProducts(ProductCategory category, Pageable pageable) {
-        return productRepository.findAllByProductCategory(category, pageable).stream()
-                .map(productMapper::toDto)
-                .toList();
+    public Page<ProductDto> getProducts(ProductCategory category, Pageable pageable) {
+        return productRepository.findAllByProductCategory(category, pageable)
+                .map(productMapper::toDto);
     }
 
     @Override
@@ -68,9 +67,9 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService {
     }
 
     @Override
-    public boolean setProductQuantityState(UUID productId, QuantityState quantityState) {
-        Product product = getProductOrThrow(productId);
-        product.setQuantityState(quantityState);
+    public boolean setProductQuantityState(SetProductQuantityStateRequest request) {
+        Product product = getProductOrThrow(request.getProductId());
+        product.setQuantityState(request.getQuantityState());
         productRepository.save(product);
         return true;
     }

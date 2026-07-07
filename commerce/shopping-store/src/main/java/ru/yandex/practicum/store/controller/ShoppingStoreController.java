@@ -1,16 +1,16 @@
 package ru.yandex.practicum.store.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.interaction.api.ShoppingStoreOperations;
 import ru.yandex.practicum.interaction.dto.ProductCategory;
 import ru.yandex.practicum.interaction.dto.ProductDto;
-import ru.yandex.practicum.interaction.dto.QuantityState;
+import ru.yandex.practicum.interaction.dto.SetProductQuantityStateRequest;
 import ru.yandex.practicum.store.service.ShoppingStoreService;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -21,7 +21,7 @@ public class ShoppingStoreController implements ShoppingStoreOperations {
     private final ShoppingStoreService shoppingStoreService;
 
     @Override
-    public List<ProductDto> getProducts(ProductCategory category, Pageable pageable) {
+    public Page<ProductDto> getProducts(ProductCategory category, Pageable pageable) {
         return shoppingStoreService.getProducts(category, pageable);
     }
 
@@ -41,8 +41,8 @@ public class ShoppingStoreController implements ShoppingStoreOperations {
     }
 
     @Override
-    public boolean setProductQuantityState(UUID productId, QuantityState quantityState) {
-        return shoppingStoreService.setProductQuantityState(productId, quantityState);
+    public boolean setProductQuantityState(SetProductQuantityStateRequest request) {
+        return shoppingStoreService.setProductQuantityState(request);
     }
 
     @Override

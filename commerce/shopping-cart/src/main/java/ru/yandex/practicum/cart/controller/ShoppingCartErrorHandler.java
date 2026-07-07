@@ -75,7 +75,7 @@ public class ShoppingCartErrorHandler {
 
     private ApiErrorResponse buildResponse(HttpStatus status, String userMessage, String message) {
         return ApiErrorResponse.builder()
-                .httpStatus(status.name())
+                .httpStatus(status.toString())
                 .userMessage(userMessage)
                 .message(message)
                 .build();

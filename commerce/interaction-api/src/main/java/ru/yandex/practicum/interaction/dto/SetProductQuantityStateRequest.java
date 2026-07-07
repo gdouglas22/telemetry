@@ -1,6 +1,5 @@
 package ru.yandex.practicum.interaction.dto;
 
-import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,23 +8,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DimensionDto {
+public class SetProductQuantityStateRequest {
 
     @NotNull
-    @DecimalMin("1")
-    private Double width;
+    private UUID productId;
 
     @NotNull
-    @DecimalMin("1")
-    private Double height;
-
-    @NotNull
-    @DecimalMin("1")
-    private Double depth;
+    private QuantityState quantityState;
 }

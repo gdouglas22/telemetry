@@ -1,6 +1,7 @@
 package ru.yandex.practicum.interaction.api;
 
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,15 +11,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.yandex.practicum.interaction.dto.ProductCategory;
 import ru.yandex.practicum.interaction.dto.ProductDto;
-import ru.yandex.practicum.interaction.dto.QuantityState;
+import ru.yandex.practicum.interaction.dto.SetProductQuantityStateRequest;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface ShoppingStoreOperations {
 
     @GetMapping
-    List<ProductDto> getProducts(@RequestParam ProductCategory category, Pageable pageable);
+    Page<ProductDto> getProducts(@RequestParam ProductCategory category, Pageable pageable);
 
     @PutMapping
     ProductDto createNewProduct(@RequestBody @Valid ProductDto productDto);
@@ -30,7 +30,7 @@ public interface ShoppingStoreOperations {
     boolean removeProductFromStore(@RequestBody UUID productId);
 
     @PostMapping("/quantityState")
-    boolean setProductQuantityState(@RequestParam UUID productId, @RequestParam QuantityState quantityState);
+    boolean setProductQuantityState(@RequestBody @Valid SetProductQuantityStateRequest request);
 
     @GetMapping("/{productId}")
     ProductDto getProduct(@PathVariable UUID productId);

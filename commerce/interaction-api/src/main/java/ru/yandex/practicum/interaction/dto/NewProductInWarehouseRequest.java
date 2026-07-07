@@ -1,8 +1,8 @@
 package ru.yandex.practicum.interaction.dto;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,6 +30,6 @@ public class NewProductInWarehouseRequest {
     private DimensionDto dimension;
 
     @NotNull
-    @Positive
+    @DecimalMin("1")
     private Double weight;
 }
