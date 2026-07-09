@@ -39,51 +39,75 @@ public class ScenarioAddedEventHandler implements HubEventHandler {
         ScenarioAddedEventAvro payload = (ScenarioAddedEventAvro) event.getPayload();
         String hubId = event.getHubId();
 
-        Set<String> sensorIds = new HashSet<>();
-        payload.getConditions().forEach(condition -> sensorIds.add(condition.getSensorId()));
-        payload.getActions().forEach(action -> sensorIds.add(action.getSensorId()));
-        for (String sensorId : sensorIds) {
-            if (sensorRepository.findByIdAndHubId(sensorId, hubId).isEmpty()) {
-                log.warn("Сценарий '{}' пропущен: датчик {} не зарегистрирован в хабе {}",
-                        payload.getName(), sensorId, hubId);
-                return;
-            }
+        if (!allSensorsRegistered(payload, hubId)) {
+            return;
         }
 
-        Scenario scenario = scenarioRepository.findByHubIdAndName(hubId, payload.getName())
-                .orElseGet(() -> Scenario.builder()
-                        .hubId(hubId)
-                        .name(payload.getName())
-                        .build());
-
-        scenario.getConditions().clear();
-        for (ScenarioConditionAvro condition : payload.getConditions()) {
-            scenario.getConditions().put(condition.getSensorId(), Condition.builder()
-                    .type(ConditionType.valueOf(condition.getType().name()))
-                    .operation(ConditionOperation.valueOf(condition.getOperation().name()))
-                    .value(mapConditionValue(condition.getValue()))
-                    .build());
-        }
-
-        scenario.getActions().clear();
-        for (DeviceActionAvro action : payload.getActions()) {
-            scenario.getActions().put(action.getSensorId(), Action.builder()
-                    .type(ActionType.valueOf(action.getType().name()))
-                    .value(action.getValue())
-                    .build());
-        }
+        Scenario scenario = getOrCreateScenario(hubId, payload.getName());
+        updateConditions(scenario, payload);
+        updateActions(scenario, payload);
 
         scenarioRepository.save(scenario);
         log.info("Сценарий '{}' сохранён для хаба {}", payload.getName(), hubId);
     }
 
-    private Integer mapConditionValue(Object value) {
-        if (value instanceof Integer intValue) {
-            return intValue;
+    private boolean allSensorsRegistered(ScenarioAddedEventAvro payload, String hubId) {
+        Set<String> sensorIds = new HashSet<>();
+        payload.getConditions().forEach(condition -> sensorIds.add(condition.getSensorId()));
+        payload.getActions().forEach(action -> sensorIds.add(action.getSensorId()));
+
+        for (String sensorId : sensorIds) {
+            if (sensorRepository.findByIdAndHubId(sensorId, hubId).isEmpty()) {
+                log.warn("Сценарий '{}' пропущен: датчик {} не зарегистрирован в хабе {}",
+                        payload.getName(), sensorId, hubId);
+                return false;
+            }
         }
-        if (value instanceof Boolean boolValue) {
-            return boolValue ? 1 : 0;
+        return true;
+    }
+
+    private Scenario getOrCreateScenario(String hubId, String name) {
+        return scenarioRepository.findByHubIdAndName(hubId, name)
+                .orElseGet(() -> Scenario.builder()
+                        .hubId(hubId)
+                        .name(name)
+                        .build());
+    }
+
+    private void updateConditions(Scenario scenario, ScenarioAddedEventAvro payload) {
+        scenario.getConditions().clear();
+        for (ScenarioConditionAvro condition : payload.getConditions()) {
+            scenario.getConditions().put(condition.getSensorId(), toCondition(condition));
         }
-        return null;
+    }
+
+    private void updateActions(Scenario scenario, ScenarioAddedEventAvro payload) {
+        scenario.getActions().clear();
+        for (DeviceActionAvro action : payload.getActions()) {
+            scenario.getActions().put(action.getSensorId(), toAction(action));
+        }
+    }
+
+    private Condition toCondition(ScenarioConditionAvro conditionAvro) {
+        return Condition.builder()
+                .type(ConditionType.valueOf(conditionAvro.getType().name()))
+                .operation(ConditionOperation.valueOf(conditionAvro.getOperation().name()))
+                .value(toConditionValue(conditionAvro))
+                .build();
+    }
+
+    private Action toAction(DeviceActionAvro actionAvro) {
+        return Action.builder()
+                .type(ActionType.valueOf(actionAvro.getType().name()))
+                .value(actionAvro.getValue())
+                .build();
+    }
+
+    private Integer toConditionValue(ScenarioConditionAvro conditionAvro) {
+        return switch (conditionAvro.getValue()) {
+            case Integer intValue -> intValue;
+            case Boolean boolValue -> boolValue ? 1 : 0;
+            case null, default -> null;
+        };
     }
 }
