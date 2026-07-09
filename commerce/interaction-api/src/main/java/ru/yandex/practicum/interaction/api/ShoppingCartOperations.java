@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.yandex.practicum.interaction.dto.ChangeProductQuantityRequest;
+import ru.yandex.practicum.interaction.dto.ChangeProductQuantityDto;
 import ru.yandex.practicum.interaction.dto.ShoppingCartDto;
 
 import java.util.List;
@@ -32,5 +32,5 @@ public interface ShoppingCartOperations {
 
     @PostMapping("/change-quantity")
     ShoppingCartDto changeProductQuantity(@RequestParam(required = false) String username,
-                                          @RequestBody @Valid ChangeProductQuantityRequest request);
+                                          @RequestBody @Valid ChangeProductQuantityDto request);
 }

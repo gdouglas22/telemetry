@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.yandex.practicum.interaction.dto.AddProductToWarehouseRequest;
+import ru.yandex.practicum.interaction.dto.AddProductToWarehouseDto;
 import ru.yandex.practicum.interaction.dto.AddressDto;
 import ru.yandex.practicum.interaction.dto.BookedProductsDto;
-import ru.yandex.practicum.interaction.dto.NewProductInWarehouseRequest;
+import ru.yandex.practicum.interaction.dto.NewProductInWarehouseDto;
 import ru.yandex.practicum.interaction.dto.ShoppingCartDto;
 import ru.yandex.practicum.interaction.exception.NoSpecifiedProductInWarehouseException;
 import ru.yandex.practicum.interaction.exception.ProductInShoppingCartLowQuantityInWarehouseException;
@@ -37,7 +37,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final WarehouseProductRepository warehouseProductRepository;
 
     @Override
-    public void newProductInWarehouse(NewProductInWarehouseRequest request) {
+    public void newProductInWarehouse(NewProductInWarehouseDto request) {
         if (warehouseProductRepository.existsById(request.getProductId())) {
             throw new SpecifiedProductAlreadyInWarehouseException(
                     "Товар с идентификатором " + request.getProductId() + " уже зарегистрирован на складе");
@@ -92,7 +92,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
-    public void addProductToWarehouse(AddProductToWarehouseRequest request) {
+    public void addProductToWarehouse(AddProductToWarehouseDto request) {
         WarehouseProduct product = warehouseProductRepository.findById(request.getProductId())
                 .orElseThrow(() -> new NoSpecifiedProductInWarehouseException(
                         "Товар с идентификатором " + request.getProductId() + " не зарегистрирован на складе"));

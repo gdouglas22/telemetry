@@ -8,7 +8,7 @@ import ru.yandex.practicum.cart.mapper.ShoppingCartMapper;
 import ru.yandex.practicum.cart.model.ShoppingCart;
 import ru.yandex.practicum.cart.repository.ShoppingCartRepository;
 import ru.yandex.practicum.interaction.client.WarehouseClient;
-import ru.yandex.practicum.interaction.dto.ChangeProductQuantityRequest;
+import ru.yandex.practicum.interaction.dto.ChangeProductQuantityDto;
 import ru.yandex.practicum.interaction.dto.ShoppingCartDto;
 import ru.yandex.practicum.interaction.exception.NoProductsInShoppingCartException;
 import ru.yandex.practicum.interaction.exception.NotAuthorizedUserException;
@@ -76,7 +76,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public ShoppingCartDto changeProductQuantity(String username, ChangeProductQuantityRequest request) {
+    public ShoppingCartDto changeProductQuantity(String username, ChangeProductQuantityDto request) {
         checkUsername(username);
         ShoppingCart cart = getOrCreateCart(username);
         checkCartActive(cart);

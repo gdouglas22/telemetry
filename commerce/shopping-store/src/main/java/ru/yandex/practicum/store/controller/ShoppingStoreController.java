@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.interaction.api.ShoppingStoreOperations;
 import ru.yandex.practicum.interaction.dto.ProductCategory;
 import ru.yandex.practicum.interaction.dto.ProductDto;
-import ru.yandex.practicum.interaction.dto.SetProductQuantityStateRequest;
+import ru.yandex.practicum.interaction.dto.SetProductQuantityStateDto;
 import ru.yandex.practicum.store.service.ShoppingStoreService;
 
 import java.util.UUID;
@@ -41,7 +41,7 @@ public class ShoppingStoreController implements ShoppingStoreOperations {
     }
 
     @Override
-    public boolean setProductQuantityState(SetProductQuantityStateRequest request) {
+    public boolean setProductQuantityState(SetProductQuantityStateDto request) {
         return shoppingStoreService.setProductQuantityState(request);
     }
 

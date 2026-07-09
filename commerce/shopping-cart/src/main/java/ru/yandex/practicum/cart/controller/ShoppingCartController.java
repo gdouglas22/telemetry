@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.cart.service.ShoppingCartService;
 import ru.yandex.practicum.interaction.api.ShoppingCartOperations;
-import ru.yandex.practicum.interaction.dto.ChangeProductQuantityRequest;
+import ru.yandex.practicum.interaction.dto.ChangeProductQuantityDto;
 import ru.yandex.practicum.interaction.dto.ShoppingCartDto;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class ShoppingCartController implements ShoppingCartOperations {
     }
 
     @Override
-    public ShoppingCartDto changeProductQuantity(String username, ChangeProductQuantityRequest request) {
+    public ShoppingCartDto changeProductQuantity(String username, ChangeProductQuantityDto request) {
         return shoppingCartService.changeProductQuantity(username, request);
     }
 }

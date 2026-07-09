@@ -2,10 +2,10 @@ package ru.yandex.practicum.interaction.client;
 
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
-import ru.yandex.practicum.interaction.dto.AddProductToWarehouseRequest;
+import ru.yandex.practicum.interaction.dto.AddProductToWarehouseDto;
 import ru.yandex.practicum.interaction.dto.AddressDto;
 import ru.yandex.practicum.interaction.dto.BookedProductsDto;
-import ru.yandex.practicum.interaction.dto.NewProductInWarehouseRequest;
+import ru.yandex.practicum.interaction.dto.NewProductInWarehouseDto;
 import ru.yandex.practicum.interaction.dto.ShoppingCartDto;
 import ru.yandex.practicum.interaction.exception.WarehouseServiceUnavailableException;
 
@@ -15,7 +15,7 @@ public class WarehouseClientFallback implements WarehouseClient {
     private final Throwable cause;
 
     @Override
-    public void newProductInWarehouse(NewProductInWarehouseRequest request) {
+    public void newProductInWarehouse(NewProductInWarehouseDto request) {
         throw translate();
     }
 
@@ -25,7 +25,7 @@ public class WarehouseClientFallback implements WarehouseClient {
     }
 
     @Override
-    public void addProductToWarehouse(AddProductToWarehouseRequest request) {
+    public void addProductToWarehouse(AddProductToWarehouseDto request) {
         throw translate();
     }
 

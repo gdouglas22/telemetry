@@ -1,5 +1,6 @@
 package ru.yandex.practicum.interaction.dto;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,11 +17,12 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SetProductQuantityStateRequest {
+public class AddProductToWarehouseDto {
 
     @NotNull
     private UUID productId;
 
     @NotNull
-    private QuantityState quantityState;
+    @Min(1)
+    private Long quantity;
 }

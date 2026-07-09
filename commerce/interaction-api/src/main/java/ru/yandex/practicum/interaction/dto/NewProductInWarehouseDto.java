@@ -1,6 +1,7 @@
 package ru.yandex.practicum.interaction.dto;
 
-import jakarta.validation.constraints.Min;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,12 +18,18 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddProductToWarehouseRequest {
+public class NewProductInWarehouseDto {
 
     @NotNull
     private UUID productId;
 
+    private Boolean fragile;
+
     @NotNull
-    @Min(1)
-    private Long quantity;
+    @Valid
+    private DimensionDto dimension;
+
+    @NotNull
+    @DecimalMin("1")
+    private Double weight;
 }

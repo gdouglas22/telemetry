@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.yandex.practicum.interaction.dto.ProductCategory;
 import ru.yandex.practicum.interaction.dto.ProductDto;
 import ru.yandex.practicum.interaction.dto.ProductState;
-import ru.yandex.practicum.interaction.dto.SetProductQuantityStateRequest;
+import ru.yandex.practicum.interaction.dto.SetProductQuantityStateDto;
 import ru.yandex.practicum.interaction.exception.ProductNotFoundException;
 import ru.yandex.practicum.store.mapper.ProductMapper;
 import ru.yandex.practicum.store.model.Product;
@@ -67,7 +67,7 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService {
     }
 
     @Override
-    public boolean setProductQuantityState(SetProductQuantityStateRequest request) {
+    public boolean setProductQuantityState(SetProductQuantityStateDto request) {
         Product product = getProductOrThrow(request.getProductId());
         product.setQuantityState(request.getQuantityState());
         productRepository.save(product);
