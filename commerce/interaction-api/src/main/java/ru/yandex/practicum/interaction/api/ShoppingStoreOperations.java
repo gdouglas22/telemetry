@@ -1,37 +1,45 @@
 package ru.yandex.practicum.interaction.api;
 
-import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import ru.yandex.practicum.interaction.dto.ProductCategory;
 import ru.yandex.practicum.interaction.dto.ProductDto;
 import ru.yandex.practicum.interaction.dto.SetProductQuantityStateDto;
 
 import java.util.UUID;
 
+/**
+ * Контракт витрины товаров интернет-магазина.
+ */
 public interface ShoppingStoreOperations {
 
-    @GetMapping
-    Page<ProductDto> getProducts(@RequestParam ProductCategory category, Pageable pageable);
+    /**
+     * Возвращает страницу товаров указанной категории.
+     */
+    Page<ProductDto> getProducts(ProductCategory category, Pageable pageable);
 
-    @PutMapping
-    ProductDto createNewProduct(@RequestBody @Valid ProductDto productDto);
+    /**
+     * Добавляет новый товар в ассортимент.
+     */
+    ProductDto createNewProduct(ProductDto productDto);
 
-    @PostMapping
-    ProductDto updateProduct(@RequestBody @Valid ProductDto productDto);
+    /**
+     * Обновляет данные существующего товара.
+     */
+    ProductDto updateProduct(ProductDto productDto);
 
-    @PostMapping("/removeProductFromStore")
-    boolean removeProductFromStore(@RequestBody UUID productId);
+    /**
+     * Выводит товар из ассортимента, переводя его в состояние DEACTIVATE.
+     */
+    boolean removeProductFromStore(UUID productId);
 
-    @PostMapping("/quantityState")
-    boolean setProductQuantityState(@RequestBody @Valid SetProductQuantityStateDto request);
+    /**
+     * Устанавливает статус остатка товара.
+     */
+    boolean setProductQuantityState(SetProductQuantityStateDto request);
 
-    @GetMapping("/{productId}")
-    ProductDto getProduct(@PathVariable UUID productId);
+    /**
+     * Возвращает сведения о товаре по его идентификатору.
+     */
+    ProductDto getProduct(UUID productId);
 }
