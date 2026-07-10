@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.yandex.practicum.interaction.exception.ApiErrorResponse;
+import ru.yandex.practicum.interaction.exception.NoOrderFoundException;
 import ru.yandex.practicum.interaction.exception.NoSpecifiedProductInWarehouseException;
 import ru.yandex.practicum.interaction.exception.ProductInShoppingCartLowQuantityInWarehouseException;
 import ru.yandex.practicum.interaction.exception.SpecifiedProductAlreadyInWarehouseException;
@@ -35,6 +36,13 @@ public class WarehouseErrorHandler {
         log.warn("Недостаточно товара на складе: {}", e.getMessage());
         return buildResponse(HttpStatus.BAD_REQUEST,
                 "Товар из корзины не находится в требуемом количестве на складе", e.getMessage());
+    }
+
+    @ExceptionHandler(NoOrderFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiErrorResponse handleNoOrderFound(NoOrderFoundException e) {
+        log.warn("Заказ не найден на складе: {}", e.getMessage());
+        return buildResponse(HttpStatus.NOT_FOUND, "Заказ не найден", e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
