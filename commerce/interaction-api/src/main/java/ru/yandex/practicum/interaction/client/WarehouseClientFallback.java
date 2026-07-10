@@ -4,10 +4,15 @@ import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import ru.yandex.practicum.interaction.dto.AddProductToWarehouseDto;
 import ru.yandex.practicum.interaction.dto.AddressDto;
+import ru.yandex.practicum.interaction.dto.AssemblyProductsForOrderDto;
 import ru.yandex.practicum.interaction.dto.BookedProductsDto;
 import ru.yandex.practicum.interaction.dto.NewProductInWarehouseDto;
+import ru.yandex.practicum.interaction.dto.ShippedToDeliveryDto;
 import ru.yandex.practicum.interaction.dto.ShoppingCartDto;
 import ru.yandex.practicum.interaction.exception.WarehouseServiceUnavailableException;
+
+import java.util.Map;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 public class WarehouseClientFallback implements WarehouseClient {
@@ -20,7 +25,22 @@ public class WarehouseClientFallback implements WarehouseClient {
     }
 
     @Override
+    public void shippedToDelivery(ShippedToDeliveryDto request) {
+        throw translate();
+    }
+
+    @Override
+    public void acceptReturn(Map<UUID, Long> products) {
+        throw translate();
+    }
+
+    @Override
     public BookedProductsDto checkProductQuantityEnoughForShoppingCart(ShoppingCartDto shoppingCart) {
+        throw translate();
+    }
+
+    @Override
+    public BookedProductsDto assemblyProductsForOrder(AssemblyProductsForOrderDto request) {
         throw translate();
     }
 
