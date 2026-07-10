@@ -18,10 +18,10 @@ import ru.yandex.practicum.interaction.exception.NotAuthorizedUserException;
 public class OrderErrorHandler {
 
     @ExceptionHandler(NoOrderFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiErrorResponse handleNoOrderFound(NoOrderFoundException e) {
         log.warn("Заказ не найден: {}", e.getMessage());
-        return buildResponse(HttpStatus.NOT_FOUND, "Заказ не найден", e.getMessage());
+        return buildResponse(HttpStatus.BAD_REQUEST, "Заказ не найден", e.getMessage());
     }
 
     @ExceptionHandler(NotAuthorizedUserException.class)

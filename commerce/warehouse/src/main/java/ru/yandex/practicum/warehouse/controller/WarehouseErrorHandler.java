@@ -10,6 +10,7 @@ import ru.yandex.practicum.interaction.exception.ApiErrorResponse;
 import ru.yandex.practicum.interaction.exception.NoOrderFoundException;
 import ru.yandex.practicum.interaction.exception.NoSpecifiedProductInWarehouseException;
 import ru.yandex.practicum.interaction.exception.ProductInShoppingCartLowQuantityInWarehouseException;
+import ru.yandex.practicum.interaction.exception.ProductInShoppingCartNotInWarehouseException;
 import ru.yandex.practicum.interaction.exception.SpecifiedProductAlreadyInWarehouseException;
 
 @Slf4j
@@ -28,6 +29,13 @@ public class WarehouseErrorHandler {
     public ApiErrorResponse handleNoProductInWarehouse(NoSpecifiedProductInWarehouseException e) {
         log.warn("Товар не зарегистрирован на складе: {}", e.getMessage());
         return buildResponse(HttpStatus.BAD_REQUEST, "Нет информации о товаре на складе", e.getMessage());
+    }
+
+    @ExceptionHandler(ProductInShoppingCartNotInWarehouseException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiErrorResponse handleProductNotInWarehouse(ProductInShoppingCartNotInWarehouseException e) {
+        log.warn("Товар из корзины отсутствует на складе: {}", e.getMessage());
+        return buildResponse(HttpStatus.BAD_REQUEST, "Товар из корзины отсутствует в БД склада", e.getMessage());
     }
 
     @ExceptionHandler(ProductInShoppingCartLowQuantityInWarehouseException.class)

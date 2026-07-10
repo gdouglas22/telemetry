@@ -50,7 +50,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto createNewOrder(String username, CreateNewOrderDto request) {
-        checkUsername(username);
         BookedProductsDto bookedProducts =
                 warehouseClient.checkProductQuantityEnoughForShoppingCart(request.getShoppingCart());
 

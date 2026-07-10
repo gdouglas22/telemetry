@@ -14,6 +14,7 @@ import ru.yandex.practicum.interaction.dto.ShoppingCartDto;
 import ru.yandex.practicum.interaction.exception.NoOrderFoundException;
 import ru.yandex.practicum.interaction.exception.NoSpecifiedProductInWarehouseException;
 import ru.yandex.practicum.interaction.exception.ProductInShoppingCartLowQuantityInWarehouseException;
+import ru.yandex.practicum.interaction.exception.ProductInShoppingCartNotInWarehouseException;
 import ru.yandex.practicum.interaction.exception.SpecifiedProductAlreadyInWarehouseException;
 import ru.yandex.practicum.warehouse.model.OrderBooking;
 import ru.yandex.practicum.warehouse.model.WarehouseProduct;
@@ -87,6 +88,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Transactional(readOnly = true)
     public BookedProductsDto checkProductQuantityEnoughForShoppingCart(ShoppingCartDto shoppingCart) {
         Map<UUID, WarehouseProduct> warehouseProducts = loadProducts(shoppingCart.getProducts().keySet());
+        checkProductsExist(shoppingCart.getProducts(), warehouseProducts);
         checkQuantityEnough(shoppingCart.getProducts(), warehouseProducts);
         return buildBookedProducts(shoppingCart.getProducts(), warehouseProducts);
     }
@@ -94,6 +96,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     public BookedProductsDto assemblyProductsForOrder(AssemblyProductsForOrderDto request) {
         Map<UUID, WarehouseProduct> warehouseProducts = loadProducts(request.getProducts().keySet());
+        checkProductsExist(request.getProducts(), warehouseProducts);
         checkQuantityEnough(request.getProducts(), warehouseProducts);
 
         request.getProducts().forEach((productId, quantity) -> {
@@ -134,12 +137,19 @@ public class WarehouseServiceImpl implements WarehouseService {
                 .collect(Collectors.toMap(WarehouseProduct::getProductId, Function.identity()));
     }
 
+    private void checkProductsExist(Map<UUID, Long> products, Map<UUID, WarehouseProduct> warehouseProducts) {
+        List<UUID> missingProducts = products.keySet().stream()
+                .filter(productId -> !warehouseProducts.containsKey(productId))
+                .toList();
+        if (!missingProducts.isEmpty()) {
+            throw new ProductInShoppingCartNotInWarehouseException(
+                    "Товары не зарегистрированы на складе: " + missingProducts);
+        }
+    }
+
     private void checkQuantityEnough(Map<UUID, Long> products, Map<UUID, WarehouseProduct> warehouseProducts) {
         List<UUID> lackingProducts = products.entrySet().stream()
-                .filter(entry -> {
-                    WarehouseProduct product = warehouseProducts.get(entry.getKey());
-                    return product == null || product.getQuantity() < entry.getValue();
-                })
+                .filter(entry -> warehouseProducts.get(entry.getKey()).getQuantity() < entry.getValue())
                 .map(Map.Entry::getKey)
                 .toList();
         if (!lackingProducts.isEmpty()) {
