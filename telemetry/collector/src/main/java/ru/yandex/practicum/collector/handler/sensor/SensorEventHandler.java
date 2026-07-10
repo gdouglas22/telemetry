@@ -1,12 +1,11 @@
 package ru.yandex.practicum.collector.handler.sensor;
 
 import org.apache.avro.specific.SpecificRecordBase;
-import ru.yandex.practicum.collector.model.sensor.SensorEvent;
-import ru.yandex.practicum.collector.model.sensor.SensorEventType;
+import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 
 public interface SensorEventHandler {
 
-    SensorEventType getMessageType();
+    SensorEventProto.PayloadCase getMessageType();
 
-    SpecificRecordBase mapToAvro(SensorEvent event);
+    SpecificRecordBase mapToAvro(SensorEventProto event);
 }
