@@ -11,6 +11,9 @@ import lombok.ToString;
 
 import java.util.UUID;
 
+/**
+ * Запрос на изменение количества единиц товара в корзине.
+ */
 @Getter
 @Setter
 @ToString
@@ -19,9 +22,15 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ChangeProductQuantityDto {
 
+    /**
+     * Идентификатор товара.
+     */
     @NotNull
     private UUID productId;
 
+    /**
+     * Новое количество товара.
+     */
     @NotNull
     @Min(0)
     private Long newQuantity;

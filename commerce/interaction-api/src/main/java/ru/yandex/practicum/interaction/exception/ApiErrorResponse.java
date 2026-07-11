@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Тело ответа сервиса об ошибке.
+ */
 @Getter
 @Setter
 @ToString
@@ -15,9 +18,18 @@ import lombok.ToString;
 @AllArgsConstructor
 public class ApiErrorResponse {
 
+    /**
+     * HTTP-статус ошибки.
+     */
     private String httpStatus;
 
+    /**
+     * Сообщение об ошибке для пользователя.
+     */
     private String userMessage;
 
+    /**
+     * Детальное описание ошибки.
+     */
     private String message;
 }

@@ -21,6 +21,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Корзина товаров пользователя.
+ */
 @Entity
 @Table(name = "shopping_carts")
 @Getter
@@ -30,17 +33,29 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ShoppingCart {
 
+    /**
+     * Идентификатор корзины.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "shopping_cart_id")
     private UUID shoppingCartId;
 
+    /**
+     * Имя пользователя.
+     */
     @Column(nullable = false)
     private String username;
 
+    /**
+     * Признак активности корзины.
+     */
     @Column(nullable = false)
     private boolean active;
 
+    /**
+     * Отображение идентификатора товара на количество.
+     */
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "shopping_cart_items", joinColumns = @JoinColumn(name = "shopping_cart_id"))
     @MapKeyColumn(name = "product_id")

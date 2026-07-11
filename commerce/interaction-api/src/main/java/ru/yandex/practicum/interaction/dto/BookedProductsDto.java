@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Сведения о зарезервированных по корзине товарах.
+ */
 @Getter
 @Setter
 @ToString
@@ -16,12 +19,21 @@ import lombok.ToString;
 @AllArgsConstructor
 public class BookedProductsDto {
 
+    /**
+     * Общий вес доставки.
+     */
     @NotNull
     private Double deliveryWeight;
 
+    /**
+     * Общий объём доставки.
+     */
     @NotNull
     private Double deliveryVolume;
 
+    /**
+     * Признак хрупкости.
+     */
     @NotNull
     private Boolean fragile;
 }

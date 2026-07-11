@@ -5,5 +5,8 @@ import ru.yandex.practicum.warehouse.model.WarehouseProduct;
 
 import java.util.UUID;
 
+/**
+ * Репозиторий товаров склада.
+ */
 public interface WarehouseProductRepository extends JpaRepository<WarehouseProduct, UUID> {
 }

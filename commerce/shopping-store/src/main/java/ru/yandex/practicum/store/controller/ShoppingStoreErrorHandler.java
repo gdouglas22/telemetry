@@ -9,10 +9,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.yandex.practicum.interaction.exception.ApiErrorResponse;
 import ru.yandex.practicum.interaction.exception.ProductNotFoundException;
 
+/**
+ * Обработчик ошибок сервиса витрины товаров.
+ */
 @Slf4j
 @RestControllerAdvice
 public class ShoppingStoreErrorHandler {
 
+    /**
+     * Обрабатывает отсутствие товара в витрине.
+     */
     @ExceptionHandler(ProductNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiErrorResponse handleProductNotFound(ProductNotFoundException e) {
@@ -20,6 +26,9 @@ public class ShoppingStoreErrorHandler {
         return buildResponse(HttpStatus.NOT_FOUND, "Товар не найден в витрине", e.getMessage());
     }
 
+    /**
+     * Обрабатывает ошибки валидации запроса.
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiErrorResponse handleValidation(MethodArgumentNotValidException e) {
@@ -27,6 +36,9 @@ public class ShoppingStoreErrorHandler {
         return buildResponse(HttpStatus.BAD_REQUEST, "Некорректный запрос", e.getMessage());
     }
 
+    /**
+     * Обрабатывает непредвиденные ошибки.
+     */
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiErrorResponse handleUnexpected(Exception e) {
@@ -34,6 +46,9 @@ public class ShoppingStoreErrorHandler {
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Внутренняя ошибка сервиса", e.getMessage());
     }
 
+    /**
+     * Формирует тело ответа об ошибке.
+     */
     private ApiErrorResponse buildResponse(HttpStatus status, String userMessage, String message) {
         return ApiErrorResponse.builder()
                 .httpStatus(status.toString())
