@@ -10,6 +10,9 @@ import lombok.ToString;
 
 import java.util.UUID;
 
+/**
+ * Запрос на изменение статуса остатка товара.
+ */
 @Getter
 @Setter
 @ToString
@@ -18,9 +21,15 @@ import java.util.UUID;
 @AllArgsConstructor
 public class SetProductQuantityStateDto {
 
+    /**
+     * Идентификатор товара.
+     */
     @NotNull
     private UUID productId;
 
+    /**
+     * Статус остатка товара.
+     */
     @NotNull
     private QuantityState quantityState;
 }

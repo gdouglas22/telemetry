@@ -10,6 +10,9 @@ import ru.yandex.practicum.interaction.dto.OrderDto;
 
 import java.util.UUID;
 
+/**
+ * Feign-клиент сервиса доставки.
+ */
 @FeignClient(name = "delivery", path = "/api/v1/delivery")
 public interface DeliveryClient extends DeliveryOperations {
 

@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Адрес доставки.
+ */
 @Embeddable
 @Getter
 @Setter
@@ -15,13 +18,28 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Address {
 
+    /**
+     * Страна.
+     */
     private String country;
 
+    /**
+     * Город.
+     */
     private String city;
 
+    /**
+     * Улица.
+     */
     private String street;
 
+    /**
+     * Дом.
+     */
     private String house;
 
+    /**
+     * Квартира.
+     */
     private String flat;
 }

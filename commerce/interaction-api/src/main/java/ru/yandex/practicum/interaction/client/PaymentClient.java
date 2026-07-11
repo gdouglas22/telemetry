@@ -9,6 +9,9 @@ import ru.yandex.practicum.interaction.dto.PaymentDto;
 
 import java.util.UUID;
 
+/**
+ * Feign-клиент сервиса оплаты.
+ */
 @FeignClient(name = "payment", path = "/api/v1/payment")
 public interface PaymentClient extends PaymentOperations {
 

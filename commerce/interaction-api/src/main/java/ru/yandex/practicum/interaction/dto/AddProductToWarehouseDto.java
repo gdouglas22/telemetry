@@ -11,6 +11,9 @@ import lombok.ToString;
 
 import java.util.UUID;
 
+/**
+ * Запрос на увеличение остатка товара на складе.
+ */
 @Getter
 @Setter
 @ToString
@@ -19,9 +22,15 @@ import java.util.UUID;
 @AllArgsConstructor
 public class AddProductToWarehouseDto {
 
+    /**
+     * Идентификатор товара.
+     */
     @NotNull
     private UUID productId;
 
+    /**
+     * Количество единиц товара.
+     */
     @NotNull
     @Min(1)
     private Long quantity;

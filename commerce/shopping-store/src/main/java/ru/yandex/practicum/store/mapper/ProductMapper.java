@@ -4,9 +4,15 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.interaction.dto.ProductDto;
 import ru.yandex.practicum.store.model.Product;
 
+/**
+ * Преобразование товара между сущностью и DTO.
+ */
 @Component
 public class ProductMapper {
 
+    /**
+     * Преобразует сущность товара в DTO.
+     */
     public ProductDto toDto(Product product) {
         return ProductDto.builder()
                 .productId(product.getProductId())
@@ -20,6 +26,9 @@ public class ProductMapper {
                 .build();
     }
 
+    /**
+     * Преобразует DTO товара в сущность.
+     */
     public Product toEntity(ProductDto productDto) {
         return Product.builder()
                 .productId(productDto.getProductId())

@@ -14,6 +14,9 @@ import ru.yandex.practicum.interaction.exception.WarehouseServiceUnavailableExce
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Заглушка клиента склада, переводящая причину сбоя в понятное исключение.
+ */
 @RequiredArgsConstructor
 public class WarehouseClientFallback implements WarehouseClient {
 
@@ -54,6 +57,9 @@ public class WarehouseClientFallback implements WarehouseClient {
         throw translate();
     }
 
+    /**
+     * Преобразует причину сбоя: ошибки клиента пробрасываются без изменений, остальное считается недоступностью склада.
+     */
     private RuntimeException translate() {
         if (cause instanceof FeignException.FeignClientException clientException) {
             return clientException;

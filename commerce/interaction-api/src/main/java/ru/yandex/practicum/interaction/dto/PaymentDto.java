@@ -9,6 +9,9 @@ import lombok.ToString;
 
 import java.util.UUID;
 
+/**
+ * Сведения об оплате заказа.
+ */
 @Getter
 @Setter
 @ToString
@@ -17,11 +20,23 @@ import java.util.UUID;
 @AllArgsConstructor
 public class PaymentDto {
 
+    /**
+     * Идентификатор оплаты.
+     */
     private UUID paymentId;
 
+    /**
+     * Общая стоимость оплаты.
+     */
     private Double totalPayment;
 
+    /**
+     * Стоимость доставки.
+     */
     private Double deliveryTotal;
 
+    /**
+     * Стоимость налога.
+     */
     private Double feeTotal;
 }

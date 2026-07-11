@@ -12,10 +12,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.yandex.practicum.interaction.exception.ApiErrorResponse;
 import ru.yandex.practicum.interaction.exception.NoDeliveryFoundException;
 
+/**
+ * Обработчик ошибок сервиса доставки.
+ */
 @Slf4j
 @RestControllerAdvice
 public class DeliveryErrorHandler {
 
+    /**
+     * Обрабатывает отсутствие доставки.
+     */
     @ExceptionHandler(NoDeliveryFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiErrorResponse handleNoDeliveryFound(NoDeliveryFoundException e) {
@@ -23,6 +29,9 @@ public class DeliveryErrorHandler {
         return buildResponse(HttpStatus.NOT_FOUND, "Доставка не найдена", e.getMessage());
     }
 
+    /**
+     * Пробрасывает ошибку смежного сервиса с исходным статусом.
+     */
     @ExceptionHandler(FeignException.class)
     public ResponseEntity<String> handleFeignException(FeignException e) {
         log.warn("Ошибка при обращении к смежному сервису: {}", e.getMessage());
@@ -35,6 +44,9 @@ public class DeliveryErrorHandler {
                 .body(e.contentUTF8());
     }
 
+    /**
+     * Обрабатывает ошибки валидации запроса.
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiErrorResponse handleValidation(MethodArgumentNotValidException e) {
@@ -42,6 +54,9 @@ public class DeliveryErrorHandler {
         return buildResponse(HttpStatus.BAD_REQUEST, "Некорректный запрос", e.getMessage());
     }
 
+    /**
+     * Обрабатывает непредвиденные ошибки.
+     */
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiErrorResponse handleUnexpected(Exception e) {
@@ -49,6 +64,9 @@ public class DeliveryErrorHandler {
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Внутренняя ошибка сервиса", e.getMessage());
     }
 
+    /**
+     * Формирует тело ответа об ошибке.
+     */
     private ApiErrorResponse buildResponse(HttpStatus status, String userMessage, String message) {
         return ApiErrorResponse.builder()
                 .httpStatus(status.toString())

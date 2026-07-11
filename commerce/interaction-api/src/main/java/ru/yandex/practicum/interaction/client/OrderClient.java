@@ -14,6 +14,9 @@ import ru.yandex.practicum.interaction.dto.ProductReturnDto;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Feign-клиент сервиса заказов.
+ */
 @FeignClient(name = "order", path = "/api/v1/order")
 public interface OrderClient extends OrderOperations {
 

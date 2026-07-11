@@ -96,6 +96,9 @@ public class PaymentServiceImpl implements PaymentService {
         log.info("Оплата {} по заказу {} завершилась ошибкой", paymentId, payment.getOrderId());
     }
 
+    /**
+     * Возвращает оплату по идентификатору или выбрасывает исключение, если оплата не найдена.
+     */
     private Payment getPaymentOrThrow(UUID paymentId) {
         return paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new NoPaymentFoundException(

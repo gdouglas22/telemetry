@@ -132,11 +132,17 @@ public class WarehouseServiceImpl implements WarehouseService {
                 .build();
     }
 
+    /**
+     * Загружает товары склада по идентификаторам.
+     */
     private Map<UUID, WarehouseProduct> loadProducts(Set<UUID> productIds) {
         return warehouseProductRepository.findAllById(productIds).stream()
                 .collect(Collectors.toMap(WarehouseProduct::getProductId, Function.identity()));
     }
 
+    /**
+     * Проверяет, что все товары зарегистрированы на складе.
+     */
     private void checkProductsExist(Map<UUID, Long> products, Map<UUID, WarehouseProduct> warehouseProducts) {
         List<UUID> missingProducts = products.keySet().stream()
                 .filter(productId -> !warehouseProducts.containsKey(productId))
@@ -147,6 +153,9 @@ public class WarehouseServiceImpl implements WarehouseService {
         }
     }
 
+    /**
+     * Проверяет, что доступного остатка достаточно для каждого товара.
+     */
     private void checkQuantityEnough(Map<UUID, Long> products, Map<UUID, WarehouseProduct> warehouseProducts) {
         List<UUID> lackingProducts = products.entrySet().stream()
                 .filter(entry -> warehouseProducts.get(entry.getKey()).getQuantity() < entry.getValue())
@@ -158,6 +167,9 @@ public class WarehouseServiceImpl implements WarehouseService {
         }
     }
 
+    /**
+     * Считает вес, объём и признак хрупкости по набору товаров.
+     */
     private BookedProductsDto buildBookedProducts(Map<UUID, Long> products,
                                                   Map<UUID, WarehouseProduct> warehouseProducts) {
         double deliveryWeight = 0;
@@ -176,6 +188,9 @@ public class WarehouseServiceImpl implements WarehouseService {
                 .build();
     }
 
+    /**
+     * Возвращает товар по идентификатору или выбрасывает исключение, если товар не найден.
+     */
     private WarehouseProduct getProductOrThrow(UUID productId) {
         return warehouseProductRepository.findById(productId)
                 .orElseThrow(() -> new NoSpecifiedProductInWarehouseException(

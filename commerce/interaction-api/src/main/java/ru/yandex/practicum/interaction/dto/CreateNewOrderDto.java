@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Запрос на создание нового заказа.
+ */
 @Getter
 @Setter
 @ToString
@@ -17,10 +20,16 @@ import lombok.ToString;
 @AllArgsConstructor
 public class CreateNewOrderDto {
 
+    /**
+     * Корзина товаров для оформления заказа.
+     */
     @NotNull
     @Valid
     private ShoppingCartDto shoppingCart;
 
+    /**
+     * Адрес доставки заказа.
+     */
     @NotNull
     private AddressDto deliveryAddress;
 }

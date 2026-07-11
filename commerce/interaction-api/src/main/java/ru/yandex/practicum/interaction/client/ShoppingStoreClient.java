@@ -16,6 +16,9 @@ import ru.yandex.practicum.interaction.dto.SetProductQuantityStateDto;
 
 import java.util.UUID;
 
+/**
+ * Feign-клиент витрины товаров.
+ */
 @FeignClient(name = "shopping-store", path = "/api/v1/shopping-store")
 public interface ShoppingStoreClient extends ShoppingStoreOperations {
 

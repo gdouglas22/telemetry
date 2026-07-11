@@ -15,10 +15,16 @@ import ru.yandex.practicum.interaction.exception.NotAuthorizedUserException;
 import ru.yandex.practicum.interaction.exception.ShoppingCartDeactivatedException;
 import ru.yandex.practicum.interaction.exception.WarehouseServiceUnavailableException;
 
+/**
+ * Обработчик ошибок сервиса корзины покупателя.
+ */
 @Slf4j
 @RestControllerAdvice
 public class ShoppingCartErrorHandler {
 
+    /**
+     * Обрабатывает запрос без имени пользователя.
+     */
     @ExceptionHandler(NotAuthorizedUserException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ApiErrorResponse handleNotAuthorizedUser(NotAuthorizedUserException e) {
@@ -26,6 +32,9 @@ public class ShoppingCartErrorHandler {
         return buildResponse(HttpStatus.UNAUTHORIZED, "Имя пользователя не указано", e.getMessage());
     }
 
+    /**
+     * Обрабатывает отсутствие искомых товаров в корзине.
+     */
     @ExceptionHandler(NoProductsInShoppingCartException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiErrorResponse handleNoProductsInCart(NoProductsInShoppingCartException e) {
@@ -33,6 +42,9 @@ public class ShoppingCartErrorHandler {
         return buildResponse(HttpStatus.BAD_REQUEST, "Искомые товары отсутствуют в корзине", e.getMessage());
     }
 
+    /**
+     * Обрабатывает попытку изменить деактивированную корзину.
+     */
     @ExceptionHandler(ShoppingCartDeactivatedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiErrorResponse handleCartDeactivated(ShoppingCartDeactivatedException e) {
@@ -40,6 +52,9 @@ public class ShoppingCartErrorHandler {
         return buildResponse(HttpStatus.BAD_REQUEST, "Корзина деактивирована", e.getMessage());
     }
 
+    /**
+     * Обрабатывает недоступность сервиса склада.
+     */
     @ExceptionHandler(WarehouseServiceUnavailableException.class)
     @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
     public ApiErrorResponse handleWarehouseUnavailable(WarehouseServiceUnavailableException e) {
@@ -47,6 +62,9 @@ public class ShoppingCartErrorHandler {
         return buildResponse(HttpStatus.SERVICE_UNAVAILABLE, "Сервис склада временно недоступен", e.getMessage());
     }
 
+    /**
+     * Пробрасывает ошибку смежного сервиса с исходным статусом.
+     */
     @ExceptionHandler(FeignException.class)
     public ResponseEntity<String> handleFeignException(FeignException e) {
         log.warn("Ошибка при обращении к сервису склада: {}", e.getMessage());
@@ -59,6 +77,9 @@ public class ShoppingCartErrorHandler {
                 .body(e.contentUTF8());
     }
 
+    /**
+     * Обрабатывает ошибки валидации запроса.
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiErrorResponse handleValidation(MethodArgumentNotValidException e) {
@@ -66,6 +87,9 @@ public class ShoppingCartErrorHandler {
         return buildResponse(HttpStatus.BAD_REQUEST, "Некорректный запрос", e.getMessage());
     }
 
+    /**
+     * Обрабатывает непредвиденные ошибки.
+     */
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiErrorResponse handleUnexpected(Exception e) {
@@ -73,6 +97,9 @@ public class ShoppingCartErrorHandler {
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Внутренняя ошибка сервиса", e.getMessage());
     }
 
+    /**
+     * Формирует тело ответа об ошибке.
+     */
     private ApiErrorResponse buildResponse(HttpStatus status, String userMessage, String message) {
         return ApiErrorResponse.builder()
                 .httpStatus(status.toString())

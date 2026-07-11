@@ -19,6 +19,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Забронированные для заказа товары.
+ */
 @Entity
 @Table(name = "order_bookings")
 @Getter
@@ -28,13 +31,22 @@ import java.util.UUID;
 @AllArgsConstructor
 public class OrderBooking {
 
+    /**
+     * Идентификатор заказа.
+     */
     @Id
     @Column(name = "order_id")
     private UUID orderId;
 
+    /**
+     * Идентификатор доставки.
+     */
     @Column(name = "delivery_id")
     private UUID deliveryId;
 
+    /**
+     * Отображение идентификатора товара на количество.
+     */
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "order_booking_items", joinColumns = @JoinColumn(name = "order_id"))
     @MapKeyColumn(name = "product_id")

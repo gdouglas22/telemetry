@@ -20,6 +20,9 @@ import ru.yandex.practicum.interaction.dto.DeliveryState;
 
 import java.util.UUID;
 
+/**
+ * Доставка заказа.
+ */
 @Entity
 @Table(name = "deliveries")
 @Getter
@@ -29,14 +32,23 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Delivery {
 
+    /**
+     * Идентификатор доставки.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "delivery_id")
     private UUID deliveryId;
 
+    /**
+     * Идентификатор заказа.
+     */
     @Column(name = "order_id", nullable = false)
     private UUID orderId;
 
+    /**
+     * Адрес отправления.
+     */
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "country", column = @Column(name = "from_country")),
@@ -47,6 +59,9 @@ public class Delivery {
     })
     private Address fromAddress;
 
+    /**
+     * Адрес назначения.
+     */
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "country", column = @Column(name = "to_country")),
@@ -57,6 +72,9 @@ public class Delivery {
     })
     private Address toAddress;
 
+    /**
+     * Статус доставки.
+     */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private DeliveryState state;

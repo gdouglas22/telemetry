@@ -10,6 +10,9 @@ import lombok.ToString;
 
 import java.util.UUID;
 
+/**
+ * Представление доставки в системе.
+ */
 @Getter
 @Setter
 @ToString
@@ -18,16 +21,31 @@ import java.util.UUID;
 @AllArgsConstructor
 public class DeliveryDto {
 
+    /**
+     * Идентификатор доставки.
+     */
     private UUID deliveryId;
 
+    /**
+     * Адрес отправления.
+     */
     @NotNull
     private AddressDto fromAddress;
 
+    /**
+     * Адрес назначения.
+     */
     @NotNull
     private AddressDto toAddress;
 
+    /**
+     * Идентификатор заказа.
+     */
     @NotNull
     private UUID orderId;
 
+    /**
+     * Статус доставки.
+     */
     private DeliveryState deliveryState;
 }

@@ -17,6 +17,9 @@ import ru.yandex.practicum.interaction.dto.PaymentState;
 
 import java.util.UUID;
 
+/**
+ * Оплата заказа.
+ */
 @Entity
 @Table(name = "payments")
 @Getter
@@ -26,26 +29,47 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Payment {
 
+    /**
+     * Идентификатор оплаты.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "payment_id")
     private UUID paymentId;
 
+    /**
+     * Идентификатор заказа.
+     */
     @Column(name = "order_id", nullable = false)
     private UUID orderId;
 
+    /**
+     * Стоимость товаров.
+     */
     @Column(name = "product_total")
     private Double productTotal;
 
+    /**
+     * Стоимость доставки.
+     */
     @Column(name = "delivery_total")
     private Double deliveryTotal;
 
+    /**
+     * Стоимость налога.
+     */
     @Column(name = "fee_total")
     private Double feeTotal;
 
+    /**
+     * Общая стоимость оплаты.
+     */
     @Column(name = "total_payment")
     private Double totalPayment;
 
+    /**
+     * Статус оплаты.
+     */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PaymentState state;

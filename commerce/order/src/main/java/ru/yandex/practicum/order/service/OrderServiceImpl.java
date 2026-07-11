@@ -149,6 +149,9 @@ public class OrderServiceImpl implements OrderService {
         return changeState(orderId, OrderState.ASSEMBLY_FAILED);
     }
 
+    /**
+     * Планирует доставку заказа от адреса склада до адреса покупателя.
+     */
     private UUID planDelivery(UUID orderId, AddressDto deliveryAddress) {
         AddressDto warehouseAddress = warehouseClient.getWarehouseAddress();
         DeliveryDto delivery = deliveryClient.planDelivery(DeliveryDto.builder()
@@ -160,6 +163,9 @@ public class OrderServiceImpl implements OrderService {
         return delivery.getDeliveryId();
     }
 
+    /**
+     * Переводит заказ в указанное состояние.
+     */
     private OrderDto changeState(UUID orderId, OrderState state) {
         Order order = getOrderOrThrow(orderId);
         order.setState(state);
@@ -167,11 +173,17 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.toDto(orderRepository.save(order));
     }
 
+    /**
+     * Возвращает заказ по идентификатору или выбрасывает исключение, если заказ не найден.
+     */
     private Order getOrderOrThrow(UUID orderId) {
         return orderRepository.findById(orderId)
                 .orElseThrow(() -> new NoOrderFoundException("Заказ с идентификатором " + orderId + " не найден"));
     }
 
+    /**
+     * Проверяет, что имя пользователя не пустое.
+     */
     private void checkUsername(String username) {
         if (username == null || username.isBlank()) {
             throw new NotAuthorizedUserException("Имя пользователя не должно быть пустым");

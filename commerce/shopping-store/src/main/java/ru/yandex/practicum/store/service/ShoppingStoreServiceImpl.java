@@ -80,6 +80,9 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService {
         return productMapper.toDto(getProductOrThrow(productId));
     }
 
+    /**
+     * Возвращает товар по идентификатору или выбрасывает исключение, если товар не найден.
+     */
     private Product getProductOrThrow(UUID productId) {
         return productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException("Товар с идентификатором " + productId + " не найден"));

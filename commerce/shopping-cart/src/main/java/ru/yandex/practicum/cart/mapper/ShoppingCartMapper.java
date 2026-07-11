@@ -6,9 +6,15 @@ import ru.yandex.practicum.interaction.dto.ShoppingCartDto;
 
 import java.util.HashMap;
 
+/**
+ * Преобразование корзины покупателя в DTO.
+ */
 @Component
 public class ShoppingCartMapper {
 
+    /**
+     * Преобразует сущность корзины в DTO.
+     */
     public ShoppingCartDto toDto(ShoppingCart shoppingCart) {
         return ShoppingCartDto.builder()
                 .shoppingCartId(shoppingCart.getShoppingCartId())

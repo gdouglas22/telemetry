@@ -8,7 +8,13 @@ import ru.yandex.practicum.store.model.Product;
 
 import java.util.UUID;
 
+/**
+ * Репозиторий товаров витрины.
+ */
 public interface ProductRepository extends JpaRepository<Product, UUID> {
 
+    /**
+     * Возвращает страницу товаров указанной категории.
+     */
     Page<Product> findAllByProductCategory(ProductCategory category, Pageable pageable);
 }

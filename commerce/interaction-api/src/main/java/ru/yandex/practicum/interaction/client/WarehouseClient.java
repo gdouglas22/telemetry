@@ -17,6 +17,9 @@ import ru.yandex.practicum.interaction.dto.ShoppingCartDto;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Feign-клиент склада.
+ */
 @FeignClient(name = "warehouse", path = "/api/v1/warehouse", fallbackFactory = WarehouseClientFallbackFactory.class)
 public interface WarehouseClient extends WarehouseOperations {
 

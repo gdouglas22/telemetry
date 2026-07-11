@@ -6,9 +6,15 @@ import ru.yandex.practicum.order.model.Order;
 
 import java.util.HashMap;
 
+/**
+ * Преобразование заказа в DTO.
+ */
 @Component
 public class OrderMapper {
 
+    /**
+     * Преобразует сущность заказа в DTO.
+     */
     public OrderDto toDto(Order order) {
         return OrderDto.builder()
                 .orderId(order.getOrderId())

@@ -13,6 +13,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Запрос на сборку товаров для заказа.
+ */
 @Getter
 @Setter
 @ToString
@@ -21,9 +24,15 @@ import java.util.UUID;
 @AllArgsConstructor
 public class AssemblyProductsForOrderDto {
 
+    /**
+     * Идентификатор заказа.
+     */
     @NotNull
     private UUID orderId;
 
+    /**
+     * Отображение идентификатора товара на количество.
+     */
     @NotEmpty
     @Builder.Default
     private Map<UUID, Long> products = new HashMap<>();

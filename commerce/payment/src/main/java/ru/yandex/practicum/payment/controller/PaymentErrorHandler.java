@@ -13,10 +13,16 @@ import ru.yandex.practicum.interaction.exception.ApiErrorResponse;
 import ru.yandex.practicum.interaction.exception.NoPaymentFoundException;
 import ru.yandex.practicum.interaction.exception.NotEnoughInfoInOrderToCalculateException;
 
+/**
+ * Обработчик ошибок сервиса оплаты.
+ */
 @Slf4j
 @RestControllerAdvice
 public class PaymentErrorHandler {
 
+    /**
+     * Обрабатывает отсутствие оплаты.
+     */
     @ExceptionHandler(NoPaymentFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiErrorResponse handleNoPaymentFound(NoPaymentFoundException e) {
@@ -24,6 +30,9 @@ public class PaymentErrorHandler {
         return buildResponse(HttpStatus.NOT_FOUND, "Оплата не найдена", e.getMessage());
     }
 
+    /**
+     * Обрабатывает нехватку информации в заказе для расчёта.
+     */
     @ExceptionHandler(NotEnoughInfoInOrderToCalculateException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiErrorResponse handleNotEnoughInfo(NotEnoughInfoInOrderToCalculateException e) {
@@ -31,6 +40,9 @@ public class PaymentErrorHandler {
         return buildResponse(HttpStatus.BAD_REQUEST, "Недостаточно информации в заказе для расчёта", e.getMessage());
     }
 
+    /**
+     * Пробрасывает ошибку смежного сервиса с исходным статусом.
+     */
     @ExceptionHandler(FeignException.class)
     public ResponseEntity<String> handleFeignException(FeignException e) {
         log.warn("Ошибка при обращении к смежному сервису: {}", e.getMessage());
@@ -43,6 +55,9 @@ public class PaymentErrorHandler {
                 .body(e.contentUTF8());
     }
 
+    /**
+     * Обрабатывает ошибки валидации запроса.
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiErrorResponse handleValidation(MethodArgumentNotValidException e) {
@@ -50,6 +65,9 @@ public class PaymentErrorHandler {
         return buildResponse(HttpStatus.BAD_REQUEST, "Некорректный запрос", e.getMessage());
     }
 
+    /**
+     * Обрабатывает непредвиденные ошибки.
+     */
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiErrorResponse handleUnexpected(Exception e) {
@@ -57,6 +75,9 @@ public class PaymentErrorHandler {
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Внутренняя ошибка сервиса", e.getMessage());
     }
 
+    /**
+     * Формирует тело ответа об ошибке.
+     */
     private ApiErrorResponse buildResponse(HttpStatus status, String userMessage, String message) {
         return ApiErrorResponse.builder()
                 .httpStatus(status.toString())

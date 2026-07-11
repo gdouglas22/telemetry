@@ -96,6 +96,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return shoppingCartMapper.toDto(cart);
     }
 
+    /**
+     * Возвращает корзину пользователя, создавая новую при её отсутствии.
+     */
     private ShoppingCart getOrCreateCart(String username) {
         return shoppingCartRepository.findByUsername(username)
                 .orElseGet(() -> shoppingCartRepository.save(ShoppingCart.builder()
@@ -104,12 +107,18 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                         .build()));
     }
 
+    /**
+     * Проверяет, что имя пользователя не пустое.
+     */
     private void checkUsername(String username) {
         if (username == null || username.isBlank()) {
             throw new NotAuthorizedUserException("Имя пользователя не должно быть пустым");
         }
     }
 
+    /**
+     * Проверяет, что корзина не деактивирована.
+     */
     private void checkCartActive(ShoppingCart cart) {
         if (!cart.isActive()) {
             throw new ShoppingCartDeactivatedException(
