@@ -25,12 +25,45 @@ import java.util.UUID;
 @Transactional
 public class DeliveryServiceImpl implements DeliveryService {
 
+    /**
+     * Базовая стоимость доставки.
+     */
     private static final double BASE_RATE = 5.0;
+
+    /**
+     * Надбавка за хрупкость заказа.
+     */
     private static final double FRAGILE_RATE = 0.2;
+
+    /**
+     * Стоимость доставки килограмма веса.
+     */
     private static final double WEIGHT_RATE = 0.3;
+
+    /**
+     * Стоимость доставки кубического метра объёма.
+     */
     private static final double VOLUME_RATE = 0.2;
+
+    /**
+     * Надбавка за доставку на другую улицу.
+     */
     private static final double STREET_MISMATCH_RATE = 0.2;
+
+    /**
+     * Название адреса склада с повышенным множителем стоимости.
+     */
     private static final String EXPENSIVE_WAREHOUSE_ADDRESS = "ADDRESS_2";
+
+    /**
+     * Множитель базовой стоимости для склада с повышенным тарифом.
+     */
+    private static final double EXPENSIVE_ADDRESS_MULTIPLIER = 2;
+
+    /**
+     * Множитель базовой стоимости для остальных складов.
+     */
+    private static final double REGULAR_ADDRESS_MULTIPLIER = 1;
 
     private final DeliveryRepository deliveryRepository;
     private final DeliveryMapper deliveryMapper;
@@ -96,23 +129,40 @@ public class DeliveryServiceImpl implements DeliveryService {
         return cost;
     }
 
+    /**
+     * Возвращает множитель стоимости в зависимости от адреса склада.
+     */
     private double warehouseMultiplier(Address fromAddress) {
         String street = Objects.toString(fromAddress.getStreet(), "");
-        return street.contains(EXPENSIVE_WAREHOUSE_ADDRESS) ? 2 : 1;
+        return street.contains(EXPENSIVE_WAREHOUSE_ADDRESS)
+                ? EXPENSIVE_ADDRESS_MULTIPLIER
+                : REGULAR_ADDRESS_MULTIPLIER;
     }
 
+    /**
+     * Возвращает вес заказа или ноль, если вес не указан.
+     */
     private double weightOf(OrderDto order) {
         return order.getDeliveryWeight() == null ? 0 : order.getDeliveryWeight();
     }
 
+    /**
+     * Возвращает объём заказа или ноль, если объём не указан.
+     */
     private double volumeOf(OrderDto order) {
         return order.getDeliveryVolume() == null ? 0 : order.getDeliveryVolume();
     }
 
+    /**
+     * Проверяет, совпадает ли улица доставки с улицей склада.
+     */
     private boolean sameStreet(Delivery delivery) {
         return Objects.equals(delivery.getFromAddress().getStreet(), delivery.getToAddress().getStreet());
     }
 
+    /**
+     * Возвращает доставку по заказу или выбрасывает исключение, если доставка не найдена.
+     */
     private Delivery getDeliveryOrThrow(UUID orderId) {
         return deliveryRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new NoDeliveryFoundException(
